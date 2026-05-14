@@ -1,0 +1,6 @@
+{
+  "name": "QuickBite",
+  "description": "A single-page Web App MVP for QuickBite featuring mobile-first design, ordering queue, e-wallet, and points redemption.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
