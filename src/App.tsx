@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronLeft, CheckCircle2, Clock, Leaf, Bell, Star, 
-  Wallet, ShoppingBag, MapPin, ArrowRight, Minus, Plus, Info, Trash2
+  Wallet, ShoppingBag, MapPin, ArrowRight, Minus, Plus, Info, Trash2, Banknote
 } from 'lucide-react';
 import logoPic from './assets/images/regenerated_image_1778690199163.png';
 import rotiCanaiImg from './assets/images/regenerated_image_1778739198145.jpg';
@@ -185,43 +185,37 @@ export default function App() {
   };
 
   const handlePay = () => {
-    if (walletBalance >= finalPrice) {
-      setWalletBalance(prev => prev - finalPrice);
-      
-      let newPoints = rewardPoints;
-      if (pointsApplied) newPoints -= 10;
-      
-      newPoints += potentialPoints;
-      setEarnedPointsContext(potentialPoints);
-      
-      setRewardPoints(newPoints);
-      
-      const newOrderNum = `#QB-${Math.floor(1000 + Math.random() * 9000)}`;
-      const newOrder = {
-          id: newOrderNum,
-          vendorName: selectedVendor.name,
-          vendorId: selectedVendor.id,
-          items: cart,
-          note: vendorNote,
-          pickupTime: pickupTime,
-          pickupDate: pickupDate,
-          datetime: new Date().toISOString(),
-          status: 'preparing',
-          basePrice,
-          pointsApplied,
-          pointsDiscount,
-          finalPrice,
-          earnedPointsContext: potentialPoints,
-          goGreen
-      };
-      setOrders(prev => [newOrder, ...prev]);
-      setOrderNumber(newOrderNum);
-      
-      setToastData(null);
-      navigate('result');
-    } else {
-      alert("Insufficient QuickWallet Balance!");
-    }
+    let newPoints = rewardPoints;
+    if (pointsApplied) newPoints -= 10;
+    
+    newPoints += potentialPoints;
+    setEarnedPointsContext(potentialPoints);
+    
+    setRewardPoints(newPoints);
+    
+    const newOrderNum = `#QB-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newOrder = {
+        id: newOrderNum,
+        vendorName: selectedVendor.name,
+        vendorId: selectedVendor.id,
+        items: cart,
+        note: vendorNote,
+        pickupTime: pickupTime,
+        pickupDate: pickupDate,
+        datetime: new Date().toISOString(),
+        status: 'preparing',
+        basePrice,
+        pointsApplied,
+        pointsDiscount,
+        finalPrice,
+        earnedPointsContext: potentialPoints,
+        goGreen
+    };
+    setOrders(prev => [newOrder, ...prev]);
+    setOrderNumber(newOrderNum);
+    
+    setToastData(null);
+    navigate('result');
   };
 
   const handleReset = () => {
@@ -357,7 +351,7 @@ export default function App() {
               
               <form onSubmit={handleLogin} className="space-y-4 bg-white/60 p-6 rounded-3xl backdrop-blur-sm border border-white/50">
                 <div>
-                  <label className="block text-xs font-semibold text-qb-brown uppercase tracking-wider mb-2 ml-1">Student ID</label>
+                  <label className="block text-xs font-semibold text-qb-brown uppercase tracking-wider mb-2 ml-1">MMU ID</label>
                   <input 
                     type="text" 
                     placeholder="e.g. 252UB12345"
@@ -407,35 +401,22 @@ export default function App() {
                 </div>
               </div>
               
-              <div className="flex gap-4">
-                <div className="flex-1 bg-gradient-to-br from-qb-orange to-[#ff9e31] p-4 rounded-2xl text-white shadow-md relative overflow-hidden flex flex-col items-start justify-between">
+              <div className="w-full">
+                <div className="w-full bg-qb-brown p-5 rounded-2xl text-white shadow-md relative overflow-hidden flex flex-row items-center justify-between">
                   <div className="absolute right-0 bottom-0 opacity-10 translate-x-4 translate-y-4 pointer-events-none">
-                    <Wallet size={80} />
+                    <Star size={120} />
                   </div>
-                  <div>
-                    <p className="text-white/80 text-xs font-medium mb-1 uppercase tracking-wider relative z-10">QuickWallet</p>
-                    <div className="font-poppins font-bold text-2xl relative z-10 mb-2 whitespace-nowrap">RM {walletBalance.toFixed(2)}</div>
-                  </div>
-                  
-                  <button 
-                    onClick={() => navigate('topup')} 
-                    className="relative z-10 bg-white/20 hover:bg-white/30 transition-colors text-white text-xs font-semibold py-2 px-4 rounded-lg backdrop-blur-sm w-full"
-                  >
-                    + Top Up
-                  </button>
-                </div>
-                <div className="flex-1 bg-qb-brown p-4 rounded-2xl text-white shadow-md relative overflow-hidden flex flex-col items-start justify-between">
-                  <div className="absolute right-0 bottom-0 opacity-10 translate-x-4 ">
-                    <Star size={80} />
-                  </div>
-                  <div>
-                    <p className="text-white/80 text-xs font-medium mb-1 uppercase tracking-wider relative z-10">Points</p>
-                    <div className="font-poppins font-bold text-2xl relative z-10 flex items-baseline gap-1 mb-2">
-                        {rewardPoints} <span className="text-sm font-sans font-medium text-white/80">Pts</span>
+                  <div className="relative z-10">
+                    <p className="text-white/80 text-xs font-medium mb-1 uppercase tracking-wider">Points</p>
+                    <div className="font-poppins font-bold text-3xl flex items-baseline gap-1">
+                        {rewardPoints} <span className="text-lg font-sans font-medium text-white/80">Pts</span>
                     </div>
                   </div>
-                  <button className="text-qb-peach text-xs font-semibold py-2 relative z-10 flex items-center gap-1 group">
-                    View Rewards <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  <button 
+                    onClick={() => showToast('Feature Unavailable', 'This feature is currently unavailable. Points can only be used as a rebate for your order.')}
+                    className="bg-white/10 hover:bg-white/20 transition-colors text-qb-peach text-sm font-semibold py-2 px-4 rounded-xl backdrop-blur-sm relative z-10 flex items-center gap-2 group shadow-sm border border-white/5"
+                  >
+                    View Rewards <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>
@@ -575,7 +556,7 @@ export default function App() {
               <div className="w-10"></div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 py-6 pb-48 space-y-6">
+            <div className="flex-1 overflow-y-auto px-6 py-6 pb-72 space-y-6">
               
               {/* Pickup Time */}
               <div className="space-y-4">
@@ -708,11 +689,10 @@ export default function App() {
                 <div className="flex items-center justify-between p-3 border-2 border-qb-orange rounded-xl bg-orange-50/50">
                   <div className="flex items-center gap-3">
                     <div className="bg-qb-orange/20 p-2 rounded-lg text-qb-orange">
-                      <Wallet size={20} />
+                      <Banknote size={20} />
                     </div>
                     <div>
-                      <div className="font-semibold text-sm">QuickWallet</div>
-                      <div className="text-xs text-gray-500">Balance: RM {walletBalance.toFixed(2)}</div>
+                      <div className="font-semibold text-sm">Pay at Counter</div>
                     </div>
                   </div>
                   <CheckCircle2 className="text-qb-orange" size={20} />
@@ -734,9 +714,13 @@ export default function App() {
                 {pointsApplied && (
                   <div className="flex justify-between text-qb-orange">
                     <span>Points Discount (10 Pts)</span>
-                    <span>- RM 0.50</span>
+                    <span>- RM {pointsDiscount.toFixed(2)}</span>
                   </div>
                 )}
+                <div className="flex justify-between items-end text-lg font-bold text-gray-900 border-t border-gray-100 pt-2 mt-1">
+                  <span>Total Payable</span>
+                  <span>RM {finalPrice.toFixed(2)}</span>
+                </div>
               </div>
               <div className="bg-orange-50/80 rounded-lg p-2.5 mb-3 border border-orange-100 text-center">
                   <span className="text-xs font-bold text-orange-600">🎁 You will earn {potentialPoints} Points from this order.</span>
@@ -745,7 +729,7 @@ export default function App() {
                 onClick={handlePay}
                 className="w-full bg-qb-orange hover:bg-[#d97d16] text-white font-poppins font-semibold text-lg py-4 rounded-xl shadow-lg shadow-orange-200 transition-colors flex items-center justify-center gap-2"
               >
-                Pay RM {finalPrice.toFixed(2)}
+                Order Now
               </button>
             </div>
           </div>
@@ -842,7 +826,7 @@ export default function App() {
                     </div>
                   )}
                   <div className="flex justify-between font-poppins font-bold text-lg pt-2 mt-2 border-t border-gray-100">
-                    <span>Total Paid</span>
+                    <span>Total Payable</span>
                     <span>RM {(currentOrder?.finalPrice || finalPrice).toFixed(2)}</span>
                   </div>
                 </div>
